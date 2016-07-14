@@ -1,0 +1,68 @@
+
+
+You will write the code into the checkpoint1A.cpp file to simulate the various branch
+predictors.
+
+copy this directory to your work directory.
+
+When your code is ready to compile, type "make"
+This generates an executable called checkpoint1A
+
+To start your own module, copy the following files to a new directory:
+checkpoint1A.cpp  makefile makefile.config
+
+You will want to run checkpoint1 on various programs, 
+here is how to run checkpoint1
+and PIN on the program /bin/ls, which lists the files in the current
+directory:
+
+To run your code, you type:
+
+pin -t obj-intel64/checkpoint1A.so -- wc README 
+
+
+This will run the code on an executable "wc" which simply
+lists the files in the current directory
+Currently, the code checkpoint1 is set to generate a file called
+"output.out"
+
+You can also pass arguments to the PIN tool to generate the results
+to a different output file, and to limit the number of branches
+that are simulated.
+
+the -o knob allows the program to select a new output file name
+the -l knob allows the program to stop after X number of branches
+
+
+pin -t obj-intel64/checkpoint1A.so -o results -l 10000 -- wc README 
+
+The above execution will generate the branch prediction summary into
+the filename "resutls" and stop after it discovers the first 10000
+branches
+
+You will need to build other simple scripts to test other benchmarks
+at (in your home directory):
+
+$HOME/benchmarks/
+
+Checkout the $HOME/benchmarks/README which explains how to run the
+real applications through your branch predictor.
+
+Currently, checkpoint1.C is configured to add instrumentation to
+count all of the branches in the program.  All you have to do is
+modify it to call a function that keeps track of predictions.
+
+To generate a shell script called "go.sh" that runs a pin tool 
+on the spec2006 integer applications:
+
+bench-run.pl --bench spec-cpu2006:int:401.bzip2:train --build base --prefix "pin -t <pin_tool_name> --" --copy output.out --log LOG
+
+You have to specify the whole path of the PIN tool that you created,
+so for example, if you created the tool checkpoint1A at:
+
+/home/faculty/dconnors/checkpoint1A/obj-intel64/checkpoint1A.so
+
+you would run:
+
+bench-run.pl --bench spec-cpu2006:int:401.bzip2:train --build base --prefix "pin -t  /home/faculty/dconnors/checkpoint1A/obj-intel64/checkpoint1A.so -o output.out -l 1000000 --" --copy output.out --log LOG
+
